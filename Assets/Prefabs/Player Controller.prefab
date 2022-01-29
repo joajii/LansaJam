@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3768825847516445584}
   - component: {fileID: 2799480660356717849}
   m_Layer: 0
-  m_Name: PlayerController
+  m_Name: Player Controller
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -44,8 +44,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
-  recordPlayer: {fileID: 0}
-  ghost: {fileID: 0}
+  recordPlayerPrefab: {fileID: 107682663219434417, guid: 77e90debd73fec74caed00be7cd9b898, type: 3}
+  ghostPrefab: {fileID: 5204907509245020165, guid: 2bbb1e5ef07014447b07fac78d9e11e0, type: 3}
   left: 1401000061000000
   right: 1301000064000000
   jump: 1101000077000000

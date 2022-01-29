@@ -6,8 +6,8 @@ using UnityEngine.SceneManagement;
 public class PlayerController : MonoBehaviour {
 
 	[SerializeField] Mover player;
-	[SerializeField] Mover recordPlayer;
-	[SerializeField] Rigidbody2D ghost;
+	[SerializeField] Mover recordPlayerPrefab;
+	[SerializeField] Rigidbody2D ghostPrefab;
 	[Space]
 	[SerializeField] KeyCode[] left = { KeyCode.LeftArrow, KeyCode.A };
 	[SerializeField] KeyCode[] right = { KeyCode.RightArrow, KeyCode.D };
@@ -19,6 +19,8 @@ public class PlayerController : MonoBehaviour {
 	public bool Recording { get; protected set; }
 	bool playing;
 
+	Rigidbody2D ghost;
+	Mover recordPlayer;
 	Mover target;
 	List<Vector2> positions = new List<Vector2>();
 	int positionIndex = 0;
@@ -29,7 +31,7 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	private void Start() {
-		CameraManager.Instance.SnapToTarget(target);
+		CameraManager.Instance?.SnapToTarget(target);
 	}
 
 	void Update() {
@@ -59,12 +61,13 @@ public class PlayerController : MonoBehaviour {
 			positionIndex = (positionIndex + 1) % positions.Count;
 		}
 
-		CameraManager.Instance.MoveToTarget(target);
+		CameraManager.Instance?.MoveToTarget(target);
 	}
 
 	private IEnumerator StartRecord() {
 		if (!player.IsGrounded()) yield break;
 		yield return new WaitForFixedUpdate();
+		if (recordPlayer == null) recordPlayer = Instantiate(recordPlayerPrefab);
 		positions.Clear();
 		target = recordPlayer;
 		recordPlayer.gameObject.SetActive(true);
@@ -75,6 +78,7 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	private void StopRecord() {
+		if (ghost == null) ghost = Instantiate(ghostPrefab);
 		positionIndex = 0;
 		ghost.transform.position = positions[0];
 		ghost.gameObject.SetActive(true);
