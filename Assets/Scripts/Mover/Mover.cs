@@ -25,8 +25,8 @@ public class Mover : MonoBehaviour {
 	}
 	
 	public void SetMoveState(int move, bool jump) {
-		this.move = move;
-		this.jump = jump;
+		if (move != 0) this.move = move;
+		if (jump != false) this.jump = jump;
 	}
 
 	void FixedUpdate() {
