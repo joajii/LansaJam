@@ -55,7 +55,7 @@ public class PlayerController : MonoBehaviour {
 		target = recordPlayer;
 		recordPlayer.gameObject.SetActive(true);
 		recordPlayer.Rigidbody.position = player.Rigidbody.position;
-		recordPlayer.Vspeed = player.Vspeed;
+		recordPlayer.VSpeed = player.VSpeed;
 		recording = true;
 	}
 
