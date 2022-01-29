@@ -1,6 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour {
 
@@ -26,7 +26,7 @@ public class PlayerController : MonoBehaviour {
 
 	void Update() {
 		int press = 0;
-		bool tryJump = GetKeyDown(jump);
+		bool tryJump = GetKey(jump);
 		bool tryRecord = GetKeyDown(record);
 
 		if (GetKey(left)) press -= 1;
@@ -39,6 +39,8 @@ public class PlayerController : MonoBehaviour {
 			else if (recording) StopRecord();
 			else StartRecord();
 		}
+
+		if (Input.GetKeyDown(KeyCode.Escape)) SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 	}
 
 	private void FixedUpdate() {

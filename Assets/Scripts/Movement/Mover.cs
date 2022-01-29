@@ -53,21 +53,24 @@ public class Mover : MonoBehaviour {
 	}
 
 	private void Move(float x, float y) {
-
-		var moveCheck = Physics2D.BoxCast(Rigidbody.position, collider.size, 0, Vector2.right, x + epsilon, groundMask);
-		if (moveCheck.collider == null) {
-			lastXHitTime = -1;
-		} else {
-			x = Mathf.Sign(x) * Mathf.Max(0, moveCheck.distance - epsilon);
-			if (lastXHitTime < 0) lastXHitTime = Time.time;
+		if (x != 0) {
+			var moveCheck = Physics2D.BoxCast(Rigidbody.position, collider.size, 0, Vector2.right, x + epsilon, groundMask);
+			if (moveCheck.collider == null) {
+				lastXHitTime = -1;
+			} else {
+				x = Mathf.Sign(x) * Mathf.Max(0, moveCheck.distance - epsilon);
+				if (lastXHitTime < 0) lastXHitTime = Time.time;
+			}
 		}
-		
-		moveCheck = Physics2D.BoxCast(Rigidbody.position + Vector2.right * x, collider.size, 0, Vector2.up, y + epsilon, groundMask);
-		if (moveCheck.collider == null) {
-			lastYHitTime = -1;
-		} else {
-			y = Mathf.Sign(y) * Mathf.Max(0, moveCheck.distance - epsilon);
-			if (lastYHitTime < 0) lastYHitTime = Time.time;
+
+		if (y != 0) {
+			var moveCheck = Physics2D.BoxCast(Rigidbody.position + Vector2.right * x, collider.size, 0, Vector2.up, y, groundMask);
+			if (moveCheck.collider == null) {
+				lastYHitTime = -1;
+			} else {
+				y = Mathf.Sign(y) * Mathf.Max(0, moveCheck.distance - epsilon);
+				if (lastYHitTime < 0) lastYHitTime = Time.time;
+			}
 		}
 
 		Rigidbody.MovePosition(Rigidbody.position + Vector2.right * x + Vector2.up * y);
