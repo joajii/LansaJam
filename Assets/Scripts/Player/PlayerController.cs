@@ -12,9 +12,11 @@ public class PlayerController : MonoBehaviour {
 	[SerializeField] KeyCode[] left = { KeyCode.LeftArrow, KeyCode.A };
 	[SerializeField] KeyCode[] right = { KeyCode.RightArrow, KeyCode.D };
 	[SerializeField] KeyCode[] jump = { KeyCode.UpArrow, KeyCode.A };
-	[SerializeField] KeyCode[] record = { KeyCode.Space};
+	[SerializeField] KeyCode[] record = { KeyCode.Space };
 
-	bool recording;
+	public static PlayerController Instance { get; protected set; }
+
+	public bool Recording { get; protected set; }
 	bool playing;
 
 	Mover target;
@@ -23,6 +25,7 @@ public class PlayerController : MonoBehaviour {
 
 	private void Awake() {
 		target = player;
+		Instance = this;
 	}
 
 	private void Start() {
@@ -35,13 +38,13 @@ public class PlayerController : MonoBehaviour {
 		bool tryRecord = GetKeyDown(record);
 
 		if (GetKey(left)) press -= 1;
-		if(GetKey(right)) press += 1;
+		if (GetKey(right)) press += 1;
 
 		target.SetMoveState(press, tryJump);
 
 		if (tryRecord) {
 			if (playing) StopPlaying();
-			else if (recording) StopRecord();
+			else if (Recording) StopRecord();
 			else StartCoroutine(StartRecord());
 		}
 
@@ -49,7 +52,7 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	private void FixedUpdate() {
-		if (recording) {
+		if (Recording) {
 			positions.Add(target.Rigidbody.position);
 		} else if (playing) {
 			ghost.position = positions[positionIndex];
@@ -68,7 +71,7 @@ public class PlayerController : MonoBehaviour {
 		recordPlayer.Rigidbody.position = player.Rigidbody.position;
 		recordPlayer.transform.position = player.transform.position;
 		recordPlayer.VSpeed = player.VSpeed;
-		recording = true;
+		Recording = true;
 	}
 
 	private void StopRecord() {
@@ -77,7 +80,7 @@ public class PlayerController : MonoBehaviour {
 		ghost.gameObject.SetActive(true);
 		recordPlayer.gameObject.SetActive(false);
 		target = player;
-		recording = false;
+		Recording = false;
 		playing = true;
 	}
 
@@ -87,7 +90,7 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	private bool GetKey(params KeyCode[] keys) {
-		foreach(KeyCode key in keys) {
+		foreach (KeyCode key in keys) {
 			if (Input.GetKey(key))
 				return true;
 		}
