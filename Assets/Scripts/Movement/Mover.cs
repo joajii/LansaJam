@@ -37,7 +37,7 @@ public class Mover : MonoBehaviour {
 	public void SetMoveState(int move, bool jump) {
 		if (move != 0) this.move = move;
 		if (jump != false) {
-			jump = true;
+			this.jump = true;
 			jumpInputTime = Time.time;
 		}
 	}
@@ -48,8 +48,7 @@ public class Mover : MonoBehaviour {
 			lastGroundedTime = Time.time;
 			if (VSpeed < 0) VSpeed = 0;
 		}
-
-
+		
 		if (jump && CanJump()) {
 			VSpeed = jumpSpeed;
 			jump = false;
