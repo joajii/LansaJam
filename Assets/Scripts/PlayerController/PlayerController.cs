@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -24,9 +25,13 @@ public class PlayerController : MonoBehaviour {
 		target = player;
 	}
 
+	private void Start() {
+		CameraManager.Instance.SnapToTarget(target);
+	}
+
 	void Update() {
 		int press = 0;
-		bool tryJump = GetKey(jump);
+		bool tryJump = GetKeyDown(jump);
 		bool tryRecord = GetKeyDown(record);
 
 		if (GetKey(left)) press -= 1;
@@ -37,7 +42,7 @@ public class PlayerController : MonoBehaviour {
 		if (tryRecord) {
 			if (playing) StopPlaying();
 			else if (recording) StopRecord();
-			else StartRecord();
+			else StartCoroutine(StartRecord());
 		}
 
 		if (Input.GetKeyDown(KeyCode.Escape)) SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
@@ -50,20 +55,25 @@ public class PlayerController : MonoBehaviour {
 			ghost.position = positions[positionIndex];
 			positionIndex = (positionIndex + 1) % positions.Count;
 		}
+
+		CameraManager.Instance.MoveToTarget(target);
 	}
 
-	private void StartRecord() {
-		if (!player.IsGrounded()) return;
+	private IEnumerator StartRecord() {
+		if (!player.IsGrounded()) yield break;
+		yield return new WaitForFixedUpdate();
 		positions.Clear();
 		target = recordPlayer;
 		recordPlayer.gameObject.SetActive(true);
 		recordPlayer.Rigidbody.position = player.Rigidbody.position;
+		recordPlayer.transform.position = player.transform.position;
 		recordPlayer.VSpeed = player.VSpeed;
 		recording = true;
 	}
 
 	private void StopRecord() {
 		positionIndex = 0;
+		ghost.transform.position = positions[0];
 		ghost.gameObject.SetActive(true);
 		recordPlayer.gameObject.SetActive(false);
 		target = player;

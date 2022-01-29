@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 5902976862811631628}
   - component: {fileID: 5902976862811631631}
   - component: {fileID: 5902976862811631630}
-  m_Layer: 0
-  m_Name: Disappearing Floor
+  m_Layer: 9
+  m_Name: Disappearing Platform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
