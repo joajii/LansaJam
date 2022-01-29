@@ -53,6 +53,7 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	private void StartRecord() {
+		if (!player.IsGrounded()) return;
 		positions.Clear();
 		target = recordPlayer;
 		recordPlayer.gameObject.SetActive(true);
