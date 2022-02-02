@@ -64,8 +64,11 @@ public class Mover : MonoBehaviour {
 	}
 
 	private void Move(float x, float y) {
+
+		var pos = Unstuck(Rigidbody.position);
+
 		if (x != 0) {
-			var moveCheck = Physics2D.BoxCast(Rigidbody.position, collider.size, 0, Vector2.right, x + epsilon, groundMask);
+			var moveCheck = Physics2D.BoxCast(pos, collider.size, 0, Vector2.right, x + epsilon, groundMask);
 			if (moveCheck.collider != null) {
 				x = Mathf.Sign(x) * Mathf.Max(0, moveCheck.distance - epsilon);
 				HSpeed = 0;
@@ -73,14 +76,37 @@ public class Mover : MonoBehaviour {
 		}
 
 		if (y != 0) {
-			var moveCheck = Physics2D.BoxCast(Rigidbody.position + Vector2.right * x, collider.size, 0, Vector2.up, y, groundMask);
+			var moveCheck = Physics2D.BoxCast(pos + Vector2.right * x, collider.size, 0, Vector2.up, y + epsilon, groundMask);
 			if (moveCheck.collider != null) {
 				y = Mathf.Sign(y) * Mathf.Max(0, moveCheck.distance - epsilon);
 				VSpeed = 0;
 			}
 		}
 
-		Rigidbody.MovePosition(Rigidbody.position + Vector2.right * x + Vector2.up * y);
+		Rigidbody.MovePosition(pos + Vector2.right * x + Vector2.up * y);
+	}
+
+	private Vector2 Unstuck(Vector2 start) {
+		var overlap = Physics2D.OverlapBoxAll(start, collider.size * (1 - epsilon), 0, groundMask);
+
+		if (overlap.Length == 0) return start;
+
+		foreach (Collider2D coll in overlap) {
+			var dir = Mathf.Sign(coll.transform.position.x - start.x);
+			var stuckCheck = Physics2D.Raycast(start - Vector2.right * dir * collider.size.x/2f, Vector2.right * dir, collider.size.x, groundMask);
+			if (stuckCheck.collider != null) {
+				return stuckCheck.point - Vector2.right * dir * (collider.size.x/2f + epsilon);
+			}
+
+
+			dir = Mathf.Sign(coll.transform.position.y - start.y);
+			stuckCheck = Physics2D.Raycast(start - Vector2.up * dir * collider.size.y / 2f, Vector2.up * dir, collider.size.y, groundMask);
+			if (stuckCheck.collider != null)  {
+				return stuckCheck.point - Vector2.up * dir * (collider.size.y/2f + epsilon);
+			}
+		}
+
+		return start;
 	}
 
 	public bool IsGrounded() {

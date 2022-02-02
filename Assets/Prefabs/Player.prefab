@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1626922176853528680}
   - component: {fileID: 1626922176853528681}
   m_Layer: 8
-  m_Name: Mover
+  m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -46,12 +46,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29de42dc974590c40a75e43341a68a5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkSpeed: 4
+  walkSpeed: 5
   jumpSpeed: 10
-  gravity: 10
+  gravity: 15
   maxVSpeed: 10
   minVSpeed: -10
   coyoteTime: 0.1
+  jumpBuffer: 0.05
 --- !u!50 &1626922176853528680
 Rigidbody2D:
   serializedVersion: 4

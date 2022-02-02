@@ -10,7 +10,7 @@ public class Goal : MonoBehaviour {
 
 	Coroutine winRoutine;
 
-	private void OnTriggerEnter(Collider other) {
+	private void OnTriggerEnter2D(Collider2D other) {
 		if (PlayerController.Instance.Recording || winRoutine != null) return;
 		winRoutine = StartCoroutine(WinRoutine(goalDelay));
 	}

@@ -42,15 +42,21 @@ public class PlayerController : MonoBehaviour {
 		if (GetKey(left)) press -= 1;
 		if (GetKey(right)) press += 1;
 
+		if (Input.GetKeyDown(KeyCode.Escape)) SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+
+		if (player == null) return;
+
 		target.SetMoveState(press, tryJump);
 
 		if (tryRecord) {
 			if (playing) StopPlaying();
 			else if (Recording) StopRecord();
 			else StartCoroutine(StartRecord());
+		} else if (Recording && target == null) {
+			FailRecord();
 		}
 
-		if (Input.GetKeyDown(KeyCode.Escape)) SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+
 	}
 
 	private void FixedUpdate() {
@@ -71,7 +77,6 @@ public class PlayerController : MonoBehaviour {
 		positions.Clear();
 		target = recordPlayer;
 		recordPlayer.gameObject.SetActive(true);
-		recordPlayer.Rigidbody.position = player.Rigidbody.position;
 		recordPlayer.transform.position = player.transform.position;
 		recordPlayer.VSpeed = player.VSpeed;
 		Recording = true;
@@ -86,6 +91,12 @@ public class PlayerController : MonoBehaviour {
 		target = player;
 		Recording = false;
 		playing = true;
+	}
+
+	private void FailRecord() {
+		if (recordPlayer != null) recordPlayer.gameObject.SetActive(false);
+		target = player;
+		Recording = false;
 	}
 
 	private void StopPlaying() {
